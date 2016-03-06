@@ -28,7 +28,7 @@
 
 		    a { 
 				text-decoration: none;
-				} 
+			} 
 
 		    button {
 		      border: none;
@@ -46,7 +46,6 @@
 		      box-shadow: none;
 		    }
 
-
 		    @media (min-width: 32em) {
 		      h1 {
 		        font-size: 4em;
@@ -60,9 +59,8 @@
 	</head>
 
 	<body>
-		<h1>Идентификация мобильного браузера</h1>
+		<h1>Идентификация браузера</h1>
 
-		<p>Браузер: <text id="brow"></text></p>
 		<p>Идентификатор браузера: <text id="brid"></text></p>
 		<p>Время расчета: <text id="time"/></p>
 
@@ -70,13 +68,10 @@
 
 		<button type="button" id="btn">Расчитать и отправить</button>
 
-		<p><small><a href="https://vk.com/bildeyko">Мне</a> отправится только версия вашего браузера, полученный идентификатор и время, затраченное на получение. Разработано с использованием <a href="https://github.com/Valve/fingerprintjs2">Fingerprintjs2</a></small></p>
+		<p><small><a href="https://vk.com/bildeyko">Мне</a> отправятся только версия вашего браузера, полученный идентификатор и время, затраченное на получение. Разработано с использованием <a href="https://github.com/Valve/fingerprintjs2">Fingerprintjs2</a></small>.</p>
 
 		<script>
-			window.onload = function() {
-				var userAgent = navigator.userAgent;
-			    $("#brow").text(userAgent);
-			};
+
 
 			$("#btn").on("click", function () {
 				var date1 = new Date();
@@ -99,26 +94,28 @@
 							$("#brid").text(result);
 
 							var userAgent = navigator.userAgent;
+							var type = 0;
 
-							sendMail(result, resultTime1, resultTime2, userAgent);
+							if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+								type = 1;
+							}
+
+							sendResult(result, resultTime1, resultTime2, userAgent, type);
 						});
 				});
 			});
 
-			function sendMail(Id, Time1, Time2, Agent) {
-				console.log(Id);
-
-				var mailBody = Agent + "<br>" + Id + "<br>" +Time1+ "<br>"+Time2; 
-
+			function sendResult(id, time1, time2, agent, type) {
 				$.ajax({
 					type: "POST",
 					url: "http://api.iquiz.win/tools/fingerprintSave",
 					data:
 					{
-						'useragent':Agent,
-						'device_id':Id,
-						'time1':Time1,
-						'time2':Time2
+						'useragent':agent,
+						'device_id':id,
+						'time1':time1,
+						'time2':time2,
+						'device_type':type
 					},
 					success: function(msg) 
 					{
