@@ -1,1 +1,109 @@
-Hello World
+<!doctype html>
+<html>
+	<head>
+		<title>Идентификация браузера</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta charset="utf-8">
+
+		<script src="http://code.jquery.com/jquery-1.12.1.min.js"></script>
+		<script src="js/fingerprint2.js"></script>
+
+		<style>
+		    body{
+		      font-family: sans-serif;
+		      max-width: 48em;
+		      margin: auto;
+		      padding: 0 5%;
+		      background: #222;
+		      color: #fff;
+		    }
+
+		    h1 {
+		      margin: 2em 0 0;
+		    }
+
+		    p {
+		      font-size: 1.2em
+		    }
+
+		    button {
+		      border: none;
+		      color: #fff;
+		      font-size: 1.2em;
+		      background: #27e;
+		      padding: 0.5em 0.75em 0.6em;
+		      border-radius: 3px;
+		      box-shadow: 0 3px 0 #05c;
+		      outline: none;
+		    }
+
+		    button:active {
+		      transform: translateY(3px);
+		      box-shadow: none;
+		    }
+
+		    strong {
+		      display: block;
+		      letter-spacing: 1px;
+		      word-wrap: break-word;
+		    }
+
+		    @media (min-width: 32em) {
+		      h1 {
+		        font-size: 4em;
+		      }
+
+		      strong {
+		        font-size: 1.5em;
+		      }
+		    }
+		</style>
+	</head>
+
+	<body>
+		<h1>Идентификация браузера</h1>
+
+		<p>Браузер: <text id="brow"></text></p>
+		<p>Идентификатор браузера: <text id="brid"></text></p>
+		<p>Время расчета: <br> <text id="time"/></p>
+
+		<button type="button" id="btn">Расчитать и отправить</button>
+
+		<script>
+			window.onload = function() {
+				var userAgent = navigator.userAgent;
+			    $("#brow").text(userAgent);
+			};
+
+			$("#btn").on("click", function () {
+				var date1 = new Date();
+				var fp = new Fingerprint2();
+
+				fp.get(function(result) {
+					var date2 = new Date();
+					var timeString1 = (date2 - date1) + "ms";
+					
+					$("#brid").text(result);
+					$("#time").text(timeString1);
+
+					date1 = new Date();
+						fp.get(function(result) {
+							var date2 = new Date();
+							var timeString2 = (date2 - date1) + "ms";
+							
+							$("#brid").text(result);
+							$("#time").append("<br>"+timeString2);
+
+							var userAgent = navigator.userAgent;
+
+							sendMail(result, timeString1, timeString2, userAgent);
+						});
+				});
+			});
+
+			function sendMail(Id, Time1, Time2, Agent) {
+				console.log(Id);
+			};
+		</script>
+	</body>
+</html>
