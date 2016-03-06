@@ -14,8 +14,8 @@
 		      max-width: 48em;
 		      margin: auto;
 		      padding: 0 5%;
-		      background: #222;
-		      color: #fff;
+		      background: #ECEDF2;
+		      color: #23556D;
 		    }
 
 		    h1 {
@@ -26,14 +26,18 @@
 		      font-size: 1.2em
 		    }
 
+		    a { 
+				text-decoration: none;
+				} 
+
 		    button {
 		      border: none;
 		      color: #fff;
 		      font-size: 1.2em;
-		      background: #27e;
+		      background: #31C949;
 		      padding: 0.5em 0.75em 0.6em;
 		      border-radius: 3px;
-		      box-shadow: 0 3px 0 #05c;
+		      box-shadow: 0 3px 0 #35AC47;
 		      outline: none;
 		    }
 
@@ -42,11 +46,6 @@
 		      box-shadow: none;
 		    }
 
-		    strong {
-		      display: block;
-		      letter-spacing: 1px;
-		      word-wrap: break-word;
-		    }
 
 		    @media (min-width: 32em) {
 		      h1 {
@@ -65,9 +64,13 @@
 
 		<p>Браузер: <text id="brow"></text></p>
 		<p>Идентификатор браузера: <text id="brid"></text></p>
-		<p>Время расчета: <br> <text id="time"/></p>
+		<p>Время расчета: <text id="time"/></p>
+
+		<p id="result"></p>
 
 		<button type="button" id="btn">Расчитать и отправить</button>
+
+		<p><small><a href="https://vk.com/bildeyko">Мне</a> отправится только версия вашего браузера, полученный идентификатор и время, затраченное на получение. Разработано с использованием <a href="https://github.com/Valve/fingerprintjs2">Fingerprintjs2</a></small></p>
 
 		<script>
 			window.onload = function() {
@@ -81,7 +84,8 @@
 
 				fp.get(function(result) {
 					var date2 = new Date();
-					var timeString1 = (date2 - date1) + "ms";
+					var resultTime1 = (date2 - date1)
+					var timeString1 = resultTime1 + "ms";
 					
 					$("#brid").text(result);
 					$("#time").text(timeString1);
@@ -89,20 +93,46 @@
 					date1 = new Date();
 						fp.get(function(result) {
 							var date2 = new Date();
-							var timeString2 = (date2 - date1) + "ms";
+							var resultTime2 = (date2 - date1)
+							var timeString2 = resultTime2 + "ms";
 							
 							$("#brid").text(result);
-							$("#time").append("<br>"+timeString2);
 
 							var userAgent = navigator.userAgent;
 
-							sendMail(result, timeString1, timeString2, userAgent);
+							sendMail(result, resultTime1, resultTime2, userAgent);
 						});
 				});
 			});
 
 			function sendMail(Id, Time1, Time2, Agent) {
 				console.log(Id);
+
+				var mailBody = Agent + "<br>" + Id + "<br>" +Time1+ "<br>"+Time2; 
+
+				$.ajax({
+					type: "POST",
+					url: "http://api.iquiz.win/tools/fingerprintSave",
+					data:
+					{
+						'useragent':Agent,
+						'device_id':Id,
+						'time1':Time1,
+						'time2':Time2
+					},
+					success: function(msg) 
+					{
+						if ('error_code' in msg) {
+							$("#result").text("Упс. Какая-то ошибка. Попробуйте еще раз.");
+						} else {
+							$("#result").text("Спасибо за помощь");
+						}
+					},
+					error: function(num)
+					{
+						$("#result").text("Упс. Какая-то ошибка. Попробуйте еще раз.");
+					}
+				});
 			};
 		</script>
 	</body>
