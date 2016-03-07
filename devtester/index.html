@@ -5,8 +5,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta charset="utf-8">
 
-		<script src="http://code.jquery.com/jquery-1.12.1.min.js"></script>
-		<script src="http://cdn.jsdelivr.net/fingerprintjs2/1.1.1/fingerprint2.min.js"></script>
 		<script>
 			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -16,6 +14,7 @@
 			ga('create', 'UA-74784615-1', 'auto');
 			ga('send', 'pageview');
 		</script>
+
 		<style>
 		    body{
 		      font-family: sans-serif;
@@ -78,9 +77,10 @@
 
 		<p><small><a href="https://vk.com/bildeyko">Мне</a> отправятся только версия вашего браузера, полученный идентификатор и время, затраченное на получение. Разработано с использованием <a href="https://github.com/Valve/fingerprintjs2">Fingerprintjs2</a></small>.</p>
 
+
+		<script src="http://code.jquery.com/jquery-1.12.1.min.js"></script>
+		<script src="http://cdn.jsdelivr.net/fingerprintjs2/1.1.1/fingerprint2.min.js"></script>
 		<script>
-
-
 			$("#btn").on("click", function () {
 				var date1 = new Date();
 				var fp = new Fingerprint2();
