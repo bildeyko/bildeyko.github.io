@@ -81,6 +81,14 @@
 		<script src="http://code.jquery.com/jquery-1.12.1.min.js"></script>
 		<script src="http://cdn.jsdelivr.net/fingerprintjs2/1.1.1/fingerprint2.min.js"></script>
 		<script>
+			window.onload  = function() {
+				var hash = localStorage.getItem("hash");
+				if (hash === null) {
+					hash = makehash();
+					localStorage.setItem("hash", hash);
+				}
+			}
+
 			$("#btn").on("click", function () {
 				var date1 = new Date();
 				var fp = new Fingerprint2();
@@ -123,7 +131,8 @@
 						'device_id':id,
 						'time1':time1,
 						'time2':time2,
-						'device_type':type
+						'device_type':type,
+						'hash':localStorage.getItem("hash")
 					},
 					success: function(msg) 
 					{
@@ -139,6 +148,17 @@
 					}
 				});
 			};
+
+			function makehash()
+			{
+			    var text = "";
+			    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+			    for( var i=0; i < 5; i++ )
+			        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+			    return text;
+			}
 		</script>
 	</body>
 </html>
