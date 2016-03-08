@@ -117,7 +117,7 @@
 					localStorage.setItem("hash", hash);
 				}
 
-				var known = {en: true, ru: false};
+				var known = {en: true, ru: true};
 				lang  = (navigator.language || navigator.userLanguage || 'en').substr(0, 2);
 				if(!known[lang])
 					lang = 'en';
