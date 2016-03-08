@@ -6,13 +6,13 @@
 		<meta charset="utf-8">
 
 		<script>
-			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			/*(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
 			ga('create', 'UA-74784615-1', 'auto');
-			ga('send', 'pageview');
+			ga('send', 'pageview');*/	
 		</script>
 
 		<style>
@@ -36,6 +36,10 @@
 		    a { 
 				text-decoration: none;
 			} 
+
+			.wrapper:lang(en) {
+		    	display: none;
+		    }
 
 		    button {
 		      border: none;
@@ -66,30 +70,56 @@
 	</head>
 
 	<body>
-		<h1>Идентификация браузера</h1>
+		<div class="wrapper" lang="ru">
+			<h1>Идентификация браузера</h1>
+		</div>
+		<div class="wrapper" lang="en" style="display: none;">
+			<h1>Browser identification</h1>
+		</div>
 
-		<p>Идентификатор браузера: <text id="brid"></text></p>
-		<p>Время расчета: <text id="time"/></p>
+		<div class="wrapper" lang="ru">
+			<p>Идентификатор браузера: <text class="brid"></text></p>
+			<p>Время расчета: <text class="time"/></p>
+		</div>
+		<div class="wrapper" lang="en">
+			<p>Browser id: <text class="brid"></text></p>
+			<p>Time took to calculate: <text class="time"/></p>
+		</div>
 
 		<p id="result"></p>
 
-		<button type="button" id="btn">Расчитать и отправить</button>
+		<div class="wrapper" lang="ru">
+			<button type="button" class="send">Расчитать и отправить</button>
 
-		<p><small><a href="https://vk.com/bildeyko">Мне</a> отправятся только версия вашего браузера, полученный идентификатор и время, затраченное на получение. Разработано с использованием <a href="https://github.com/Valve/fingerprintjs2">Fingerprintjs2</a></small>.</p>
+			<p><small><a href="https://vk.com/bildeyko">Мне</a> отправятся только версия вашего браузера, полученный идентификатор и время, затраченное на получение. Разработано с использованием <a href="https://github.com/Valve/fingerprintjs2">Fingerprintjs2</a></small>.</p>
+		</div>
+		<div class="wrapper" lang="en">
+			<button type="button" class="send">Calculate id and send results</button>
+
+			<p><small>You will send <a href="https://www.facebook.com/bildeyko">me</a> only a browser version, a calculated identifier and time took to calculate. Was developed using <a href="https://github.com/Valve/fingerprintjs2">Fingerprintjs2</a></small>.</p>
+		</div>
 
 
 		<script src="http://code.jquery.com/jquery-1.12.1.min.js"></script>
 		<script src="http://cdn.jsdelivr.net/fingerprintjs2/1.1.1/fingerprint2.min.js"></script>
 		<script>
+			var lang;
 			window.onload  = function() {
 				var hash = localStorage.getItem("hash");
 				if (hash === null) {
 					hash = makehash();
 					localStorage.setItem("hash", hash);
 				}
+
+				var known = {en: true, ru: true};
+				lang  = (navigator.language || navigator.userLanguage || 'en').substr(0, 2);
+				if(!known[lang])
+					lang = 'en';
+				$('div.wrapper[lang='  + lang + ']').show();
+				$('div.wrapper[lang!=' + lang + ']').hide();
 			}
 
-			$("#btn").on("click", function () {
+			$(".send").on("click", function () {
 				var date1 = new Date();
 				var fp = new Fingerprint2();
 
@@ -98,8 +128,8 @@
 					var resultTime1 = (date2 - date1)
 					var timeString1 = resultTime1 + "ms";
 					
-					$("#brid").text(result);
-					$("#time").text(timeString1);
+					$(".brid").text(result);
+					$(".time").text(timeString1);
 
 					date1 = new Date();
 						fp.get(function(result) {
@@ -107,7 +137,7 @@
 							var resultTime2 = (date2 - date1)
 							var timeString2 = resultTime2 + "ms";
 							
-							$("#brid").text(result);
+							$(".brid").text(result);
 
 							var userAgent = navigator.userAgent;
 							var type = 0;
@@ -136,15 +166,25 @@
 					},
 					success: function(msg) 
 					{
-						if ('error_code' in msg) {
-							$("#result").text("Упс. Какая-то ошибка. Попробуйте еще раз.");
-						} else {
-							$("#result").text("Спасибо за помощь");
-						}
+						if(lang === 'ru')
+							if('error_code' in msg) {
+								$("#result").text("Упс. Какая-то ошибка. Попробуйте еще раз.");
+							}else{
+								$("#result").text("Спасибо за помощь");
+							}
+						if(lang === 'en')
+							if('error_code' in msg) {
+								$("#result").text("Ooops. Something wrong. Please try again.");
+							}else{
+								$("#result").text("Many thanks for the reply.");
+							}
 					},
 					error: function(num)
 					{
-						$("#result").text("Упс. Какая-то ошибка. Попробуйте еще раз.");
+						if(lang === 'ru')
+							$("#result").text("Упс. Какая-то ошибка. Попробуйте еще раз.");
+						if(lang === 'en')
+							$("#result").text("Ooops. Something wrong. Please try again.");
 					}
 				});
 			};
