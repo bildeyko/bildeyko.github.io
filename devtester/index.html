@@ -6,13 +6,13 @@
 		<meta charset="utf-8">
 
 		<script>
-			/*(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
 			ga('create', 'UA-74784615-1', 'auto');
-			ga('send', 'pageview');*/	
+			ga('send', 'pageview');	
 		</script>
 
 		<style>
@@ -38,6 +38,10 @@
 			} 
 
 			.wrapper:lang(en) {
+		    	display: none;
+		    }
+
+		    #body_wrapper {
 		    	display: none;
 		    }
 
@@ -70,33 +74,35 @@
 	</head>
 
 	<body>
-		<div class="wrapper" lang="ru">
-			<h1>Идентификация браузера</h1>
-		</div>
-		<div class="wrapper" lang="en" style="display: none;">
-			<h1>Browser identification</h1>
-		</div>
+		<div id="body_wrapper">
+			<div class="wrapper" lang="ru">
+				<h1>Идентификация браузера</h1>
+			</div>
+			<div class="wrapper" lang="en">
+				<h1>Browser identification</h1>
+			</div>
 
-		<div class="wrapper" lang="ru">
-			<p>Идентификатор браузера: <text class="brid"></text></p>
-			<p>Время расчета: <text class="time"/></p>
-		</div>
-		<div class="wrapper" lang="en">
-			<p>Browser id: <text class="brid"></text></p>
-			<p>Time took to calculate: <text class="time"/></p>
-		</div>
+			<div class="wrapper" lang="ru">
+				<p>Идентификатор браузера: <text class="brid"></text></p>
+				<p>Время расчета: <text class="time"/></p>
+			</div>
+			<div class="wrapper" lang="en">
+				<p>Browser id: <text class="brid"></text></p>
+				<p>Time took to calculate: <text class="time"/></p>
+			</div>
 
-		<p id="result"></p>
+			<p id="result"></p>
 
-		<div class="wrapper" lang="ru">
-			<button type="button" class="send">Расчитать и отправить</button>
+			<div class="wrapper" lang="ru">
+				<button type="button" class="send">Расчитать и отправить</button>
 
-			<p><small><a href="https://vk.com/bildeyko">Мне</a> отправятся только версия вашего браузера, полученный идентификатор и время, затраченное на получение. Разработано с использованием <a href="https://github.com/Valve/fingerprintjs2">Fingerprintjs2</a></small>.</p>
-		</div>
-		<div class="wrapper" lang="en">
-			<button type="button" class="send">Calculate id and send results</button>
+				<p><small><a href="https://vk.com/bildeyko">Мне</a> отправятся только версия вашего браузера, полученный идентификатор и время, затраченное на получение. Разработано с использованием <a href="https://github.com/Valve/fingerprintjs2">Fingerprintjs2</a></small>.</p>
+			</div>
+			<div class="wrapper" lang="en">
+				<button type="button" class="send">Calculate id and send results</button>
 
-			<p><small>You will send <a href="https://www.facebook.com/bildeyko">me</a> only a browser version, a calculated identifier and time took to calculate. Was developed using <a href="https://github.com/Valve/fingerprintjs2">Fingerprintjs2</a></small>.</p>
+				<p><small>You will send <a href="https://www.facebook.com/bildeyko">me</a> only a browser version, a calculated identifier and time took to calculate. Was developed using <a href="https://github.com/Valve/fingerprintjs2">Fingerprintjs2</a></small>.</p>
+			</div>
 		</div>
 
 
@@ -111,12 +117,14 @@
 					localStorage.setItem("hash", hash);
 				}
 
-				var known = {en: true, ru: true};
+				var known = {en: true, ru: false};
 				lang  = (navigator.language || navigator.userLanguage || 'en').substr(0, 2);
 				if(!known[lang])
 					lang = 'en';
 				$('div.wrapper[lang='  + lang + ']').show();
 				$('div.wrapper[lang!=' + lang + ']').hide();
+
+				$('div#body_wrapper').show();
 			}
 
 			$(".send").on("click", function () {
